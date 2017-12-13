@@ -1,0 +1,25 @@
+#!/bin/bash
+
+# This script will run pdfsig from the docker image.
+# Usage:
+# $./pdfsigd signed.pdf
+#
+# It will run as root so the files that you are trying to
+# validate must be readable by root. If you try to use
+# another user with the --user option  of the docker run command,
+# you must ensure that the folder $HOME/.mozilla/firefox
+# exists inside the docker image
+#
+# The files that you are trying to read must be inside the
+# folder from where you are running this script, this because
+# the volume mounted inside docker is the current folder.
+
+docker run --rm \
+    --interactive \
+    --tty \
+    --net host \
+    --volume `pwd`:/app \
+    --workdir /app \
+    --entrypoint pdfsig \
+    nerones/poppler-docker:pki-gob-ar "$@"
+
